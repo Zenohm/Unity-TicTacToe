@@ -25,7 +25,8 @@ public class GridElement : MonoBehaviour {
 	// Update is called once per frame
 	void OnMouseEnter ()
 	{
-		myRenderer.color = highlightColor;
+		if(TicTacToeLogicManager.currentGameState != TicTacToeLogicManager.GameState.FINISHED && !occupied)
+			myRenderer.color = highlightColor;
 	}
 
 	void OnMouseExit () 
@@ -36,5 +37,6 @@ public class GridElement : MonoBehaviour {
 	void OnMouseDown()
 	{
 		gameLogicManager.click (gridIndex);
+		myRenderer.color = baseColor;
 	}
 }

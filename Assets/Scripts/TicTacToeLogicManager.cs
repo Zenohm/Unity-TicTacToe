@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class TicTacToeLogicManager : MonoBehaviour {
 
-	enum Player {PLAYER1,PLAYER2};
-	enum GameState {PLAYING,FINISHED}
-	Player currentPlayer;
-	GameState currentGameState;
+	public enum Player {PLAYER1,PLAYER2};
+	public enum GameState {PLAYING,FINISHED}
+	public static Player currentPlayer;
+	public static GameState currentGameState;
+	public bool aiEnabled;
+	Random rand;
 	Grid gridManager;
 	char[,] virtualGrid = new char[3,3];
 
@@ -15,6 +17,7 @@ public class TicTacToeLogicManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		rand = new Random ();
 		currentGameState = GameState.PLAYING;
 		currentPlayer = Player.PLAYER1;
 		gridManager = FindObjectOfType<Grid> ();
@@ -22,7 +25,8 @@ public class TicTacToeLogicManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (aiEnabled && currentPlayer == Player.PLAYER2 && currentGameState == GameState.PLAYING)
+			aiTurn ();
 	}
 
 	public void click(Vector2i gridPosition)
@@ -107,20 +111,42 @@ public class TicTacToeLogicManager : MonoBehaviour {
 
 	void gameOver(char playerSymbol)
 	{
-		print ("Game Over");
-		switch(playerSymbol)
+		if (currentGameState != GameState.FINISHED) 
 		{
-		case 'X':
-			print ("X Wins");
-			currentGameState = GameState.FINISHED;
-			break;
-		case 'O':
-			print("O Wins");
-			currentGameState = GameState.FINISHED;
-			break;
-		default:
-			print("No Winner");
-			break;
+			print ("Game Over");
+			switch (playerSymbol) {
+			case 'X':
+				print ("X Wins");
+				currentGameState = GameState.FINISHED;
+				break;
+			case 'O':
+				print ("O Wins");
+				currentGameState = GameState.FINISHED;
+				break;
+			default:
+				print ("No Winner");
+				currentGameState = GameState.FINISHED;
+				break;
+			}
 		}
+	}
+
+	void aiTurn()
+	{
+		int x;
+		int y;
+		while (true) 
+		{
+			x = (int)Random.Range (0, 3);
+			y = (int)Random.Range (0, 3);
+			if(!gridManager.grid[x,y].occupied)
+				break;
+		}
+		click (new Vector2i (x, y));
+	}
+
+	public void reset()
+	{
+
 	}
 }
