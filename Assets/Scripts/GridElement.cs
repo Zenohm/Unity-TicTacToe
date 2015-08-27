@@ -7,10 +7,13 @@ public class GridElement : MonoBehaviour {
 	public SpriteRenderer myRenderer;
 	public Color baseColor;
 	public Color highlightColor;
+	public bool occupied = false;
+	TicTacToeLogicManager gameLogicManager;
 
 	void Awake() 
 	{
 		myRenderer = GetComponent<SpriteRenderer>();
+		gameLogicManager = FindObjectOfType<TicTacToeLogicManager> ();
 		baseColor = myRenderer.color;
 	}
 
@@ -28,5 +31,11 @@ public class GridElement : MonoBehaviour {
 	void OnMouseExit () 
 	{
 		myRenderer.color = baseColor;
+	}
+
+	void OnMouseDown()
+	{
+		print (gridIndex.x + ", " + gridIndex.y);
+		gameLogicManager.click (gridIndex);
 	}
 }
