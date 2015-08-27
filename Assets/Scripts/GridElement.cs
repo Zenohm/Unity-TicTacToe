@@ -35,7 +35,6 @@ public class GridElement : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		print (gridIndex.x + ", " + gridIndex.y);
 		gameLogicManager.click (gridIndex);
 	}
 }

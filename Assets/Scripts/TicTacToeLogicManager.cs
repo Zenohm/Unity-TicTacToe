@@ -30,7 +30,6 @@ public class TicTacToeLogicManager : MonoBehaviour {
 
 		if (gridManager.grid [gridPosition.x, gridPosition.y].occupied || currentGameState == GameState.FINISHED) 
 		{
-			//do nothing
 			return;
 		}
 		switch (currentPlayer) 
@@ -80,34 +79,47 @@ public class TicTacToeLogicManager : MonoBehaviour {
 		//check Columns and Rows
 		for(int x=0; x < 3; x++)
 		{
-			if(virtualGrid[x,0] == playerSymbol && virtualGrid[x,1] == playerSymbol && virtualGrid[x,2] == playerSymbol)
-				gameOver();
-			if(virtualGrid[0,x] == playerSymbol && virtualGrid[1,x] == playerSymbol && virtualGrid[2,x] == playerSymbol)
-				gameOver();
+			if(virtualGrid[x, 0] == playerSymbol && virtualGrid[x, 1] == playerSymbol && virtualGrid[x, 2] == playerSymbol)
+				gameOver(playerSymbol);
+			if(virtualGrid[0, x] == playerSymbol && virtualGrid[1, x] == playerSymbol && virtualGrid[2, x] == playerSymbol)
+				gameOver(playerSymbol);
 
 		}
 		//check Diagnals
 		if (virtualGrid [0, 0] == playerSymbol && virtualGrid [1, 1] == playerSymbol && virtualGrid [2, 2] == playerSymbol)
-			gameOver ();
+			gameOver (playerSymbol);
 		if (virtualGrid [0, 2] == playerSymbol && virtualGrid [1, 1] == playerSymbol && virtualGrid [2, 0] == playerSymbol)
-			gameOver ();
+			gameOver (playerSymbol);
+
+		//check Stalemate
+		bool stalemate = true;
+		for(int x = 0; x < 3; x++)
+		{
+			for (int y = 0; y < 3; y++)
+			{
+				if(virtualGrid[x,y] != 'X' && virtualGrid[x,y] != 'O')
+					stalemate = false;
+			}
+		}
+		if (stalemate)
+			gameOver ('s');
 	}
 
-	void gameOver()
+	void gameOver(char playerSymbol)
 	{
 		print ("Game Over");
-		switch(currentPlayer)
+		switch(playerSymbol)
 		{
-		case Player.PLAYER1:
-			print ("Player1 Wins");
+		case 'X':
+			print ("X Wins");
 			currentGameState = GameState.FINISHED;
 			break;
-		case Player.PLAYER2:
-			print("Player2 Wins");
+		case 'O':
+			print("O Wins");
 			currentGameState = GameState.FINISHED;
 			break;
 		default:
-			print("Shit's Broke");
+			print("No Winner");
 			break;
 		}
 	}
