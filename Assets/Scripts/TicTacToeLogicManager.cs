@@ -11,7 +11,8 @@ public class TicTacToeLogicManager : MonoBehaviour {
 	public bool aiEnabled;
 	Random rand;
 	Grid gridManager;
-	char[,] virtualGrid = new char[3,3];
+	AIManager aiManager;
+	public char[,] virtualGrid = new char[3,3];
 
 
 
@@ -21,12 +22,13 @@ public class TicTacToeLogicManager : MonoBehaviour {
 		currentGameState = GameState.PLAYING;
 		currentPlayer = Player.PLAYER1;
 		gridManager = FindObjectOfType<Grid> ();
+		aiManager = FindObjectOfType<AIManager> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (aiEnabled && currentPlayer == Player.PLAYER2 && currentGameState == GameState.PLAYING)
-			aiTurn ();
+			aiManager.aiTurn ();
 	}
 
 	public void click(Vector2i gridPosition)
@@ -130,20 +132,7 @@ public class TicTacToeLogicManager : MonoBehaviour {
 			}
 		}
 	}
-
-	void aiTurn()
-	{
-		int x;
-		int y;
-		while (true) 
-		{
-			x = (int)Random.Range (0, 3);
-			y = (int)Random.Range (0, 3);
-			if(!gridManager.grid[x,y].occupied)
-				break;
-		}
-		click (new Vector2i (x, y));
-	}
+	
 
 	public void reset()
 	{
