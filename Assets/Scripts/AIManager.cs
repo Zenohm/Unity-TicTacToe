@@ -84,8 +84,12 @@ public class AIManager : MonoBehaviour {
 
 
 		if(neighborTile1 == 'X')
-			value += 1;
+			value += 2;
 		if (neighborTile2 == 'X')
+			value += 2;
+		if(neighborTile1 == 'O' && neighborTile2 != 'X')
+			value += 1;
+		if(neighborTile2 == 'O' && neighborTile1 != 'X')
 			value += 1;
 		if (neighborTile1 == 'X' && neighborTile2 == 'X')
 			value += 8;
@@ -105,8 +109,12 @@ public class AIManager : MonoBehaviour {
 		
 		
 		if(neighborTile1 == 'X')
-			value += 1;
+			value += 2;
 		if (neighborTile2 == 'X')
+			value += 2;
+		if(neighborTile1 == 'O' && neighborTile2 != 'X')
+			value += 1;
+		if(neighborTile2 == 'O' && neighborTile1 != 'X')
 			value += 1;
 		if (neighborTile1 == 'X' && neighborTile2 == 'X')
 			value += 8;
@@ -116,11 +124,7 @@ public class AIManager : MonoBehaviour {
 		//check diagnals
 		if ((x == 0 && y == 0) || (x == 0 && y == 2) || (x == 2 && y == 0) || (x == 2 && y == 2) || (x == 1 && y == 1))
 		{
-			int x1;
-			int y1;
-			int x2;
-			int y2;
-			value += 1; // corner/center pieces get a small bonus
+			value += 0; // corner/center pieces get a small bonus
 
 			if(x == 0 && y == 0)
 			{
@@ -144,12 +148,16 @@ public class AIManager : MonoBehaviour {
 			}
 			if (x == 1 && y == 1)
 			{
-				value += 2;
+				value += 1;
 				neighborTile1 = logicManager.virtualGrid[0,0];
 				neighborTile2 = logicManager.virtualGrid[2,2];
 				if(neighborTile1 == 'X')
-					value += 1;
+					value += 2;
 				if (neighborTile2 == 'X')
+					value += 2;
+				if(neighborTile1 == 'O' && neighborTile2 != 'X')
+					value += 1;
+				if(neighborTile2 == 'O' && neighborTile1 != 'X')
 					value += 1;
 				if (neighborTile1 == 'X' && neighborTile2 == 'X')
 					value += 8;
@@ -160,8 +168,12 @@ public class AIManager : MonoBehaviour {
 			}
 
 			if(neighborTile1 == 'X')
-				value += 1;
+				value += 2;
 			if (neighborTile2 == 'X')
+				value += 2;
+			if(neighborTile1 == 'O' && neighborTile2 != 'X')
+				value += 1;
+			if(neighborTile2 == 'O' && neighborTile1 != 'X')
 				value += 1;
 			if (neighborTile1 == 'X' && neighborTile2 == 'X')
 				value += 8;

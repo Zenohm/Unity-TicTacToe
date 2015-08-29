@@ -9,6 +9,7 @@ public class TicTacToeLogicManager : MonoBehaviour {
 	public static Player currentPlayer;
 	public static GameState currentGameState;
 	public bool aiEnabled;
+	public bool aiMovesFirst;
 	Random rand;
 	Grid gridManager;
 	AIManager aiManager;
@@ -20,7 +21,10 @@ public class TicTacToeLogicManager : MonoBehaviour {
 	void Start () {
 		rand = new Random ();
 		currentGameState = GameState.PLAYING;
-		currentPlayer = Player.PLAYER1;
+		if (!aiMovesFirst)
+			currentPlayer = Player.PLAYER1;
+		else
+			currentPlayer = Player.PLAYER2;
 		gridManager = FindObjectOfType<Grid> ();
 		aiManager = FindObjectOfType<AIManager> ();
 	}
