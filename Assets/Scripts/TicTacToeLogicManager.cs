@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,6 +9,8 @@ public class TicTacToeLogicManager : MonoBehaviour {
 	public enum GameState {PLAYING,FINISHED}
 	public static Player currentPlayer;
 	public static GameState currentGameState;
+	public Text winnerText;
+	Canvas gameOverScreen;
 	public bool aiEnabled;
 	public bool aiMovesFirst;
 	Random rand;
@@ -27,6 +30,9 @@ public class TicTacToeLogicManager : MonoBehaviour {
 			currentPlayer = Player.PLAYER2;
 		gridManager = FindObjectOfType<Grid> ();
 		aiManager = FindObjectOfType<AIManager> ();
+		gameOverScreen = FindObjectOfType<Canvas> ();
+		gameOverScreen.enabled = false;
+		winnerText = GameObject.Find ("WinnerDeclaration").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
@@ -123,23 +129,46 @@ public class TicTacToeLogicManager : MonoBehaviour {
 			switch (playerSymbol) {
 			case 'X':
 				print ("X Wins");
+				winnerText.text = "X wins";
 				currentGameState = GameState.FINISHED;
 				break;
 			case 'O':
 				print ("O Wins");
+				winnerText.text = "O wins";
 				currentGameState = GameState.FINISHED;
 				break;
 			default:
 				print ("No Winner");
+				winnerText.text = "Draw";
 				currentGameState = GameState.FINISHED;
 				break;
 			}
+			gameOverScreen.enabled = true;
 		}
 	}
 	
 
+	#region GUI Functions
+
 	public void reset()
 	{
-
+		foreach (GameObject currentObject in ObjectFactory.Xlist)
+			Destroy (currentObject);
+		foreach (GameObject currentObject in ObjectFactory.Olist)
+			Destroy (currentObject);
+		ObjectFactory.Olist.Clear ();
+		ObjectFactory.Xlist.Clear ();
+		gridManager.resetGrid ();
+		gameOverScreen.enabled = false;
+		virtualGrid = new char[3, 3];
+		currentGameState = GameState.PLAYING;
+		currentPlayer = aiMovesFirst ? Player.PLAYER2 : Player.PLAYER1;
 	}
+
+	public void exitApplication()
+	{
+		Application.Quit ();
+	}
+
+	#endregion
 }

@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiEnabled: 1
-  aiMovesFirst: 0
+  aiMovesFirst: 1
 --- !u!114 &1695660380
 MonoBehaviour:
   m_ObjectHideFlags: 0

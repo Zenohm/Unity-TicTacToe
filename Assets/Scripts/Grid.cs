@@ -37,6 +37,12 @@ public class Grid : MonoBehaviour {
 			}
 		}
 	}
+
+	public void resetGrid()
+	{
+		for (int x = 0; x < gridWidth * gridHeight; x++)
+			grid [x % gridWidth, x / gridWidth].occupied = false;
+	}
 	
 
 }
