@@ -5,9 +5,9 @@ public class AIManager : MonoBehaviour {
 
 	class PossibleMove {
 		public Vector2i location;
-		public int value;
+		public byte value;
 
-		public PossibleMove (Vector2i location, int value) {
+		public PossibleMove (Vector2i location, byte value) {
 			this.location = location;
 			this.value    = value;
 		}
@@ -25,8 +25,8 @@ public class AIManager : MonoBehaviour {
 
 	public void aiTurn() {
 		possibleMoves.Clear ();
-		for(int y = 0; y < 3; y++)
-			for(int x = 0; x < 3; x++)
+		for(byte y = 0; y < 3; y++)
+			for(byte x = 0; x < 3; x++)
 				if(logicManager.virtualGrid[x,y] == 0)
 					calculatePossibleMove(x,y);
 
@@ -36,55 +36,55 @@ public class AIManager : MonoBehaviour {
 	}
 
 	private void pickRandom() {
-		int x,y;
+		byte x,y;
 
         do {
-            x = (int)Random.Range(0, 3);
-            y = (int)Random.Range(0, 3);
+            x = (byte)Random.Range(0, 3);
+            y = (byte)Random.Range(0, 3);
         } while (gridManager.grid[x, y].occupied);
 
 		logicManager.click (new Vector2i (x, y));
 	}
 
-    private void calculatePossibleMove(int x, int y) {
-        int value = 0;
-        int center_x = x % 2;
-        int center_y = y % 2;
+    private void calculatePossibleMove(byte x, byte y) {
+        byte value = 0;
+        byte center_x = (byte) (x % 2);
+        byte center_y = (byte) (y % 2);
 
         //DEFENSIVE CALCULATIONS
         //check horizontal
-        value += getCheckValue(Mathf.Abs(x + center_x - 2), y, 1 + center_x, y);
+        value += (byte) getCheckValue((byte) Mathf.Abs(x + center_x - 2), y, (byte) (1 + center_x), y);
 
         //check vertical
-        value += getCheckValue(x, Mathf.Abs(y + center_y - 2), x, 1 + center_y);
+        value += (byte) getCheckValue(x, (byte) Mathf.Abs(y + center_y - 2), x, (byte) (1 + center_y));
 
 		//check diagonals
 		if ((x+y)%2 == 0) {
             // the coordinates of the tile behind selected tile and of the tile ahead of selected tile
-            int[] adjTile = new int[4];
+            byte[] adjTile = new byte[4];
 
             value += 0; // corner/center pieces get a small bonus
-            adjTile[0] = Mathf.Abs(x + center_x - 2); adjTile[1] = Mathf.Abs(y + center_y - 2);
-            adjTile[2] = 1 + center_x;                adjTile[3] = 1 + center_y;
+            adjTile[0] = (byte) Mathf.Abs(x + center_x - 2); adjTile[1] = (byte) Mathf.Abs(y + center_y - 2);
+            adjTile[2] = (byte) (1 + center_x);              adjTile[3] = (byte) (1 + center_y);
             //check to see if it's in the center
             if (center_x == 1) {
-                value += 1 + getCheckValue(adjTile[0], adjTile[1], adjTile[2], adjTile[3]);
+                value += (byte) (1 + getCheckValue(adjTile[0], adjTile[1], adjTile[2], adjTile[3]));
                 adjTile[0] = 0; adjTile[1] = 2;
                 adjTile[2] = 2; adjTile[3] = 0;
 			}
 
-            value += getCheckValue(adjTile[0], adjTile[1], adjTile[2], adjTile[3]);
+            value += (byte) getCheckValue(adjTile[0], adjTile[1], adjTile[2], adjTile[3]);
         }
         possibleMoves.Add (new PossibleMove (new Vector2i (x, y), value));
 	}
 
-    private int getCheckValue(int x, int y, int x2, int y2) {
-        int value = 0;
+    private byte getCheckValue(byte x, byte y, byte x2, byte y2) {
+        byte value = 0;
         char neighborTile1 = logicManager.virtualGrid[x, y];
         char neighborTile2 = logicManager.virtualGrid[x2, y2];
 
         if (neighborTile1 == neighborTile2 && (neighborTile1 == 'X' || neighborTile1 == 'O') ) {
-            value = neighborTile1 == 'O' ? 102 : 12;
+            value = (byte) (neighborTile1 == 'O' ? 102 : 12);
         } else if (neighborTile1 == 'X' || neighborTile2 == 'X') {
             value = 2;
         } else if (neighborTile1 == 'O' || neighborTile2 == 'O') {
