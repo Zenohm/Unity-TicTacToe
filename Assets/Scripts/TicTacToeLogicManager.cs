@@ -1,27 +1,25 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 
 public class TicTacToeLogicManager : MonoBehaviour {
 
-	public enum Player {PLAYER1,PLAYER2};
+    public bool aiEnabled;
+    public bool aiMovesFirst;
+    public char[,] virtualGrid = new char[3, 3];
+    public enum Player {PLAYER1,PLAYER2};
 	public enum GameState {PLAYING,FINISHED}
 	public static Player currentPlayer;
-	public static GameState currentGameState;
+    public static GameState currentGameState;
 	public Text winnerText;
-	Canvas gameOverScreen;
-	public bool aiEnabled;
-	public bool aiMovesFirst;
-	Random rand;
-	Grid gridManager;
-	AIManager aiManager;
-	public char[,] virtualGrid = new char[3,3];
+
+    private AIManager aiManager;
+    private Canvas gameOverScreen;
+    private Grid gridManager;
+    private Random rand;
 
 
-
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		rand = new Random ();
 		currentGameState = GameState.PLAYING;
 		if (!aiMovesFirst)
@@ -34,7 +32,7 @@ public class TicTacToeLogicManager : MonoBehaviour {
 		gameOverScreen.enabled = false;
 		winnerText = GameObject.Find ("WinnerDeclaration").GetComponent<Text>();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (aiEnabled && currentPlayer == Player.PLAYER2 && currentGameState == GameState.PLAYING)
@@ -44,11 +42,10 @@ public class TicTacToeLogicManager : MonoBehaviour {
 	public void click(Vector2i gridPosition)
 	{
 
-		if (gridManager.grid [gridPosition.x, gridPosition.y].occupied || currentGameState == GameState.FINISHED) 
-		{
+		if (gridManager.grid [gridPosition.x, gridPosition.y].occupied || currentGameState == GameState.FINISHED)
 			return;
-		}
-		switch (currentPlayer) 
+
+		switch (currentPlayer)
 		{
 		case Player.PLAYER1:
 			ObjectFactory.placeX(gridPosition);
@@ -87,43 +84,37 @@ public class TicTacToeLogicManager : MonoBehaviour {
 	{
 		char playerSymbol;
 
-		if(currentPlayer == Player.PLAYER1)
-			playerSymbol = 'X';
-		else
-			playerSymbol = 'O';
+        playerSymbol = (currentPlayer == Player.PLAYER1) ? 'X' : 'O';
 
 		//check Columns and Rows
 		for(int x=0; x < 3; x++)
-		{
-			if(virtualGrid[x, 0] == playerSymbol && virtualGrid[x, 1] == playerSymbol && virtualGrid[x, 2] == playerSymbol)
-				gameOver(playerSymbol);
-			if(virtualGrid[0, x] == playerSymbol && virtualGrid[1, x] == playerSymbol && virtualGrid[2, x] == playerSymbol)
-				gameOver(playerSymbol);
+			if(virtualGrid[x, 0] == playerSymbol && virtualGrid[x, 1] == playerSymbol && virtualGrid[x, 2] == playerSymbol
+            || virtualGrid[0, x] == playerSymbol && virtualGrid[1, x] == playerSymbol && virtualGrid[2, x] == playerSymbol)
+                gameOver(playerSymbol);
 
-		}
-		//check Diagnals
-		if (virtualGrid [0, 0] == playerSymbol && virtualGrid [1, 1] == playerSymbol && virtualGrid [2, 2] == playerSymbol)
-			gameOver (playerSymbol);
-		if (virtualGrid [0, 2] == playerSymbol && virtualGrid [1, 1] == playerSymbol && virtualGrid [2, 0] == playerSymbol)
+		//check Diagonals
+		if (virtualGrid [0, 0] == playerSymbol && virtualGrid [1, 1] == playerSymbol && virtualGrid [2, 2] == playerSymbol
+        ||  virtualGrid [0, 2] == playerSymbol && virtualGrid [1, 1] == playerSymbol && virtualGrid [2, 0] == playerSymbol)
 			gameOver (playerSymbol);
 
 		//check Stalemate
 		bool stalemate = true;
-		for(int x = 0; x < 3; x++)
-		{
-			for (int y = 0; y < 3; y++)
-			{
-				if(virtualGrid[x,y] != 'X' && virtualGrid[x,y] != 'O')
-					stalemate = false;
-			}
-		}
-		if (stalemate)
+
+        for (int x = 0; x < 3; x++)
+            for (int y = 0; y < 3; y++)
+                if (virtualGrid[x, y] != 'X' && virtualGrid[x, y] != 'O') {
+                    stalemate = false;
+                    goto StalemateExit;
+                }
+
+        StalemateExit:
+        if (stalemate)
 			gameOver ('s');
 	}
 
 	void gameOver(char playerSymbol)
 	{
-		if (currentGameState != GameState.FINISHED) 
+		if (currentGameState != GameState.FINISHED)
 		{
 			print ("Game Over");
 			switch (playerSymbol) {
@@ -146,7 +137,7 @@ public class TicTacToeLogicManager : MonoBehaviour {
 			gameOverScreen.enabled = true;
 		}
 	}
-	
+
 
 	#region GUI Functions
 
